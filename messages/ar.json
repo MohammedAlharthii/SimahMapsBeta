@@ -1,0 +1,145 @@
+{
+  "common": {
+    "appName": "عقار CRM",
+    "search": "بحث",
+    "add": "إضافة",
+    "edit": "تعديل",
+    "delete": "حذف",
+    "save": "حفظ",
+    "cancel": "إلغاء",
+    "confirm": "تأكيد",
+    "back": "رجوع",
+    "next": "التالي",
+    "previous": "السابق",
+    "loading": "جاري التحميل...",
+    "noResults": "لا توجد نتائج",
+    "viewAll": "عرض الكل",
+    "actions": "إجراءات",
+    "status": "الحالة",
+    "date": "التاريخ",
+    "price": "السعر",
+    "area": "المساحة",
+    "sar": "ر.س",
+    "sqm": "م²"
+  },
+  "nav": {
+    "dashboard": "لوحة التحكم",
+    "properties": "العقارات",
+    "clients": "العملاء",
+    "deals": "الصفقات",
+    "followups": "المتابعات",
+    "marketers": "المسوقين",
+    "campaigns": "الحملات",
+    "commissions": "العمولات",
+    "reports": "التقارير",
+    "users": "المستخدمين",
+    "settings": "الإعدادات"
+  },
+  "auth": {
+    "login": "تسجيل الدخول",
+    "register": "تسجيل جديد",
+    "logout": "تسجيل الخروج",
+    "email": "البريد الإلكتروني",
+    "password": "كلمة المرور",
+    "confirmPassword": "تأكيد كلمة المرور",
+    "name": "الاسم",
+    "phone": "رقم الهاتف",
+    "rememberMe": "تذكرني",
+    "forgotPassword": "نسيت كلمة المرور؟",
+    "noAccount": "ليس لديك حساب؟",
+    "hasAccount": "لديك حساب بالفعل؟",
+    "registerSuccess": "تم التسجيل بنجاح. سيتم تفعيل حسابك بعد موافقة المسؤول",
+    "loginError": "البريد الإلكتروني أو كلمة المرور غير صحيحة",
+    "accountPending": "حسابك في انتظار الموافقة"
+  },
+  "property": {
+    "title": "العقارات",
+    "addProperty": "إضافة عقار",
+    "editProperty": "تعديل عقار",
+    "propertyDetails": "تفاصيل العقار",
+    "bedrooms": "غرف نوم",
+    "bathrooms": "حمامات",
+    "floors": "طوابق",
+    "yearBuilt": "سنة البناء",
+    "furnished": "مفروش",
+    "unfurnished": "غير مفروش",
+    "negotiable": "قابل للتفاوض",
+    "featured": "مميز",
+    "amenities": "المرافق",
+    "description": "الوصف",
+    "location": "الموقع",
+    "images": "الصور",
+    "documents": "المستندات",
+    "types": {
+      "APARTMENT": "شقة",
+      "VILLA": "فيلا",
+      "LAND": "أرض",
+      "OFFICE": "مكتب",
+      "SHOP": "محل",
+      "BUILDING": "عمارة",
+      "WAREHOUSE": "مستودع",
+      "FARM": "مزرعة",
+      "COMPOUND": "مجمع",
+      "TOWER": "برج"
+    },
+    "statuses": {
+      "AVAILABLE": "متاح",
+      "RESERVED": "محجوز",
+      "SOLD": "مباع",
+      "RENTED": "مؤجر",
+      "UNDER_CONSTRUCTION": "تحت الإنشاء",
+      "OFF_MARKET": "خارج السوق"
+    },
+    "purposes": {
+      "SALE": "بيع",
+      "RENT": "إيجار",
+      "INVESTMENT": "استثمار"
+    }
+  },
+  "client": {
+    "title": "العملاء",
+    "addClient": "إضافة عميل",
+    "clientDetails": "تفاصيل العميل",
+    "budget": "الميزانية",
+    "nationality": "الجنسية",
+    "preferences": "التفضيلات",
+    "source": "المصدر",
+    "assignedTo": "مسؤول عن",
+    "stages": {
+      "NEW": "جديد",
+      "CONTACTED": "تم التواصل",
+      "QUALIFIED": "مؤهل",
+      "NEGOTIATING": "تفاوض",
+      "CLOSED_WON": "تم الإغلاق",
+      "CLOSED_LOST": "خسارة"
+    }
+  },
+  "deal": {
+    "title": "الصفقات",
+    "amount": "المبلغ",
+    "commission": "العمولة",
+    "contract": "العقد",
+    "stages": {
+      "NEGOTIATION": "تفاوض",
+      "CONTRACT_SIGNED": "توقيع العقد",
+      "PAYMENT_PENDING": "في انتظار الدفع",
+      "COMPLETED": "مكتملة",
+      "CANCELLED": "ملغاة"
+    }
+  },
+  "dashboard": {
+    "totalProperties": "إجمالي العقارات",
+    "totalClients": "إجمالي العملاء",
+    "activeDeals": "الصفقات النشطة",
+    "monthlyRevenue": "الإيرادات الشهرية",
+    "recentActivity": "النشاط الأخير",
+    "todayFollowups": "متابعات اليوم",
+    "quickActions": "إجراءات سريعة"
+  },
+  "map": {
+    "showMap": "عرض الخريطة",
+    "showList": "عرض القائمة",
+    "propertiesFound": "عقار متاح",
+    "searchPlaceholder": "ابحث عن عقار، مدينة، حي..."
+  }
+}

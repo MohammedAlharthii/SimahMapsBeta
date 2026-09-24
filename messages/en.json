@@ -1,0 +1,145 @@
+{
+  "common": {
+    "appName": "Aqar CRM",
+    "search": "Search",
+    "add": "Add",
+    "edit": "Edit",
+    "delete": "Delete",
+    "save": "Save",
+    "cancel": "Cancel",
+    "confirm": "Confirm",
+    "back": "Back",
+    "next": "Next",
+    "previous": "Previous",
+    "loading": "Loading...",
+    "noResults": "No results found",
+    "viewAll": "View All",
+    "actions": "Actions",
+    "status": "Status",
+    "date": "Date",
+    "price": "Price",
+    "area": "Area",
+    "sar": "SAR",
+    "sqm": "sqm"
+  },
+  "nav": {
+    "dashboard": "Dashboard",
+    "properties": "Properties",
+    "clients": "Clients",
+    "deals": "Deals",
+    "followups": "Follow-ups",
+    "marketers": "Marketers",
+    "campaigns": "Campaigns",
+    "commissions": "Commissions",
+    "reports": "Reports",
+    "users": "Users",
+    "settings": "Settings"
+  },
+  "auth": {
+    "login": "Login",
+    "register": "Register",
+    "logout": "Logout",
+    "email": "Email",
+    "password": "Password",
+    "confirmPassword": "Confirm Password",
+    "name": "Name",
+    "phone": "Phone",
+    "rememberMe": "Remember me",
+    "forgotPassword": "Forgot password?",
+    "noAccount": "Don't have an account?",
+    "hasAccount": "Already have an account?",
+    "registerSuccess": "Registration successful. Your account will be activated after admin approval.",
+    "loginError": "Invalid email or password",
+    "accountPending": "Your account is pending approval"
+  },
+  "property": {
+    "title": "Properties",
+    "addProperty": "Add Property",
+    "editProperty": "Edit Property",
+    "propertyDetails": "Property Details",
+    "bedrooms": "Bedrooms",
+    "bathrooms": "Bathrooms",
+    "floors": "Floors",
+    "yearBuilt": "Year Built",
+    "furnished": "Furnished",
+    "unfurnished": "Unfurnished",
+    "negotiable": "Negotiable",
+    "featured": "Featured",
+    "amenities": "Amenities",
+    "description": "Description",
+    "location": "Location",
+    "images": "Images",
+    "documents": "Documents",
+    "types": {
+      "APARTMENT": "Apartment",
+      "VILLA": "Villa",
+      "LAND": "Land",
+      "OFFICE": "Office",
+      "SHOP": "Shop",
+      "BUILDING": "Building",
+      "WAREHOUSE": "Warehouse",
+      "FARM": "Farm",
+      "COMPOUND": "Compound",
+      "TOWER": "Tower"
+    },
+    "statuses": {
+      "AVAILABLE": "Available",
+      "RESERVED": "Reserved",
+      "SOLD": "Sold",
+      "RENTED": "Rented",
+      "UNDER_CONSTRUCTION": "Under Construction",
+      "OFF_MARKET": "Off Market"
+    },
+    "purposes": {
+      "SALE": "Sale",
+      "RENT": "Rent",
+      "INVESTMENT": "Investment"
+    }
+  },
+  "client": {
+    "title": "Clients",
+    "addClient": "Add Client",
+    "clientDetails": "Client Details",
+    "budget": "Budget",
+    "nationality": "Nationality",
+    "preferences": "Preferences",
+    "source": "Source",
+    "assignedTo": "Assigned To",
+    "stages": {
+      "NEW": "New",
+      "CONTACTED": "Contacted",
+      "QUALIFIED": "Qualified",
+      "NEGOTIATING": "Negotiating",
+      "CLOSED_WON": "Closed Won",
+      "CLOSED_LOST": "Closed Lost"
+    }
+  },
+  "deal": {
+    "title": "Deals",
+    "amount": "Amount",
+    "commission": "Commission",
+    "contract": "Contract",
+    "stages": {
+      "NEGOTIATION": "Negotiation",
+      "CONTRACT_SIGNED": "Contract Signed",
+      "PAYMENT_PENDING": "Payment Pending",
+      "COMPLETED": "Completed",
+      "CANCELLED": "Cancelled"
+    }
+  },
+  "dashboard": {
+    "totalProperties": "Total Properties",
+    "totalClients": "Total Clients",
+    "activeDeals": "Active Deals",
+    "monthlyRevenue": "Monthly Revenue",
+    "recentActivity": "Recent Activity",
+    "todayFollowups": "Today's Follow-ups",
+    "quickActions": "Quick Actions"
+  },
+  "map": {
+    "showMap": "Show Map",
+    "showList": "Show List",
+    "propertiesFound": "properties available",
+    "searchPlaceholder": "Search property, city, district..."
+  }
+}

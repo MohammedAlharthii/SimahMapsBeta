@@ -1,0 +1,328 @@
+@import 'leaflet/dist/leaflet.css';
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 240 10% 4%;
+    --foreground: 0 0% 98%;
+    --card: 240 10% 7%;
+    --card-foreground: 0 0% 98%;
+    --popover: 240 10% 7%;
+    --popover-foreground: 0 0% 98%;
+    --primary: 16 88% 54%; /* SIMA Orange #F15A24 */
+    --primary-foreground: 0 0% 100%;
+    --secondary: 240 5% 15%;
+    --secondary-foreground: 0 0% 98%;
+    --muted: 240 5% 15%;
+    --muted-foreground: 240 5% 65%;
+    --accent: 16 88% 54%;
+    --accent-foreground: 0 0% 100%;
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 240 6% 16%;
+    --input: 240 6% 16%;
+    --ring: 16 88% 54%;
+    --radius: 0.75rem;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-[#09090B] text-zinc-100 antialiased;
+    font-feature-settings: "rlig" 1, "calt" 1;
+  }
+}
+
+/* ==========================================================================
+   SIMA Leaflet Dark Map & Custom Markers
+   ========================================================================== */
+
+/* Leaflet Container Dark Override */
+.leaflet-container {
+  background: #09090B !important;
+  font-family: inherit !important;
+  outline: none !important;
+}
+
+/* Custom Zoom Controls */
+.leaflet-bar {
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  border-radius: 12px !important;
+  overflow: hidden !important;
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.8) !important;
+}
+
+.leaflet-bar a {
+  background: rgba(18, 18, 24, 0.95) !important;
+  color: #f4f4f5 !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important;
+  transition: all 0.2s ease !important;
+  width: 34px !important;
+  height: 34px !important;
+  line-height: 34px !important;
+}
+
+.leaflet-bar a:hover {
+  background: #F15A24 !important;
+  color: #ffffff !important;
+}
+
+/* Marker Pill Badge */
+.sima-leaflet-marker-container {
+  background: transparent !important;
+  border: none !important;
+}
+
+.sima-marker-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(18, 18, 24, 0.92);
+  backdrop-filter: blur(8px);
+  border: 1.5px solid #F15A24;
+  border-radius: 9999px;
+  padding: 4px 10px;
+  color: #ffffff;
+  font-weight: 700;
+  font-size: 12px;
+  cursor: pointer;
+  white-space: nowrap;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.6), 0 0 12px rgba(241, 90, 36, 0.3);
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  transform-origin: center bottom;
+  user-select: none;
+}
+
+.sima-marker-pill:hover,
+.sima-marker-pill.selected {
+  background: linear-gradient(135deg, #F15A24 0%, #EA580C 100%);
+  border-color: #ffffff;
+  color: #ffffff;
+  transform: scale(1.12) translateY(-2px);
+  box-shadow: 0 8px 25px rgba(241, 90, 36, 0.6), 0 0 20px rgba(241, 90, 36, 0.8);
+  z-index: 9999 !important;
+}
+
+.sima-marker-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 9999px;
+  background-color: #F15A24;
+  box-shadow: 0 0 8px #F15A24;
+  flex-shrink: 0;
+}
+
+.sima-marker-pill:hover .sima-marker-dot,
+.sima-marker-pill.selected .sima-marker-dot {
+  background-color: #ffffff;
+  box-shadow: 0 0 8px #ffffff;
+}
+
+.sima-marker-price {
+  letter-spacing: -0.01em;
+}
+
+.sima-marker-price .currency {
+  font-size: 10px;
+  opacity: 0.85;
+  margin-right: 2px;
+}
+
+/* Dark Luxury Popup Card */
+.sima-dark-popup .leaflet-popup-content-wrapper {
+  background: rgba(18, 18, 24, 0.96) !important;
+  backdrop-filter: blur(16px);
+  border: 1px solid rgba(241, 90, 36, 0.35) !important;
+  border-radius: 18px !important;
+  color: #f4f4f5 !important;
+  box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.9), 0 0 25px rgba(241, 90, 36, 0.2) !important;
+  padding: 0 !important;
+  overflow: hidden;
+}
+
+.sima-dark-popup .leaflet-popup-content {
+  margin: 0 !important;
+  line-height: 1.4 !important;
+}
+
+.sima-dark-popup .leaflet-popup-tip {
+  background: rgba(18, 18, 24, 0.96) !important;
+  border: 1px solid rgba(241, 90, 36, 0.35) !important;
+}
+
+.sima-dark-popup a.leaflet-popup-close-button {
+  color: #a1a1aa !important;
+  top: 10px !important;
+  left: 10px !important;
+  right: auto !important;
+  background: rgba(0, 0, 0, 0.5) !important;
+  width: 24px !important;
+  height: 24px !important;
+  border-radius: 9999px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 0 !important;
+  transition: all 0.2s ease !important;
+}
+
+.sima-dark-popup a.leaflet-popup-close-button:hover {
+  color: #ffffff !important;
+  background: #F15A24 !important;
+}
+
+/* Card HTML inside Popup */
+.sima-popup-card {
+  width: 100%;
+}
+
+.sima-popup-image-wrapper {
+  position: relative;
+  width: 100%;
+  height: 130px;
+  overflow: hidden;
+  background: #27272a;
+}
+
+.sima-popup-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.4s ease;
+}
+
+.sima-popup-card:hover .sima-popup-image {
+  transform: scale(1.05);
+}
+
+.sima-popup-badge {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: rgba(241, 90, 36, 0.95);
+  color: #ffffff;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 6px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+}
+
+.sima-popup-featured {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  background: rgba(24, 24, 27, 0.85);
+  backdrop-filter: blur(4px);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: #fbbf24;
+  font-size: 10px;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 6px;
+}
+
+.sima-popup-content {
+  padding: 12px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.leaflet-container a,
+.leaflet-popup-content a,
+.sima-popup-card a {
+  color: #ffffff !important;
+  text-decoration: none !important;
+}
+
+.sima-popup-title {
+  font-size: 14px;
+  font-weight: 700;
+  color: #ffffff !important;
+  margin: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  text-decoration: none !important;
+}
+
+.sima-popup-title:hover {
+  color: #F15A24 !important;
+}
+
+.sima-popup-location {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 11px;
+  color: #a1a1aa;
+}
+
+.sima-popup-specs {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 11px;
+  color: #d4d4d8;
+  padding: 6px 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.sima-popup-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 4px;
+}
+
+.sima-popup-price {
+  font-size: 15px;
+  font-weight: 800;
+  color: #F15A24;
+}
+
+.sima-popup-price small {
+  font-size: 11px;
+  color: #a1a1aa;
+}
+
+.sima-popup-btn {
+  background: linear-gradient(135deg, #F15A24 0%, #EA580C 100%);
+  color: #ffffff;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 5px 12px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 8px rgba(241, 90, 36, 0.35);
+}
+
+.sima-popup-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 14px rgba(241, 90, 36, 0.5);
+}
+
+/* Custom Scrollbar for Luxury Dark */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #09090B;
+}
+::-webkit-scrollbar-thumb {
+  background: #27272A;
+  border-radius: 9999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #F15A24;
+}

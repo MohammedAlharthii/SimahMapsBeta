@@ -1,0 +1,629 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+// -----------------------------------------------------------------------------
+// Enums
+// -----------------------------------------------------------------------------
+
+enum Role {
+  SYSTEM_ADMIN
+  GENERAL_MANAGER
+  SALES_MANAGER
+  PROPERTY_MANAGER
+  CUSTOMER_SERVICE
+  INTERNAL_MARKETER
+  EXTERNAL_MARKETER
+  ACCOUNTANT
+  CONTRACTS
+  VIEWER
+}
+
+enum PropertyType {
+  APARTMENT
+  VILLA
+  LAND
+  OFFICE
+  SHOP
+  BUILDING
+  WAREHOUSE
+  FARM
+  COMPOUND
+  TOWER
+}
+
+enum PropertyStatus {
+  AVAILABLE
+  RESERVED
+  SOLD
+  RENTED
+  UNDER_CONSTRUCTION
+  OFF_MARKET
+}
+
+enum PropertyPurpose {
+  SALE
+  RENT
+  INVESTMENT
+}
+
+enum OwnerType {
+  INDIVIDUAL
+  COMPANY
+  DEVELOPER
+}
+
+enum ContractStatus {
+  ACTIVE
+  EXPIRED
+  TERMINATED
+  PENDING
+}
+
+enum ClientSource {
+  WEBSITE
+  PHONE
+  WALKIN
+  REFERRAL
+  SOCIAL_MEDIA
+  CAMPAIGN
+  WHATSAPP
+  OTHER
+}
+
+enum ClientStatus {
+  NEW
+  CONTACTED
+  QUALIFIED
+  NEGOTIATING
+  CLOSED_WON
+  CLOSED_LOST
+}
+
+enum MatchStatus {
+  PENDING
+  SENT
+  VIEWED
+  INTERESTED
+  REJECTED
+}
+
+enum FollowUpType {
+  CALL
+  MEETING
+  WHATSAPP
+  EMAIL
+  VISIT
+  TASK
+}
+
+enum FollowUpStatus {
+  PENDING
+  COMPLETED
+  CANCELLED
+  OVERDUE
+}
+
+enum BookingStatus {
+  PENDING
+  APPROVED
+  REJECTED
+  CANCELLED
+  COMPLETED
+}
+
+enum DealStatus {
+  NEGOTIATION
+  CONTRACT_SIGNED
+  PAYMENT_PENDING
+  COMPLETED
+  CANCELLED
+}
+
+enum CommissionType {
+  COMPANY
+  EMPLOYEE
+  MARKETER
+  REFERRAL
+}
+
+enum CommissionStatus {
+  PENDING
+  APPROVED
+  PAID
+  DISPUTED
+}
+
+enum MarketerType {
+  INTERNAL
+  EXTERNAL
+}
+
+enum MarketerStatus {
+  ACTIVE
+  SUSPENDED
+  TERMINATED
+}
+
+enum CampaignPlatform {
+  GOOGLE
+  INSTAGRAM
+  TIKTOK
+  SNAPCHAT
+  WHATSAPP
+  FACEBOOK
+  EMAIL
+  SMS
+  OTHER
+}
+
+enum CampaignStatus {
+  PLANNED
+  ACTIVE
+  PAUSED
+  COMPLETED
+  CANCELLED
+}
+
+// -----------------------------------------------------------------------------
+// Models
+// -----------------------------------------------------------------------------
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String  @map("user_id")
+  type              String
+  provider          String
+  providerAccountId String  @map("provider_account_id")
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+  @@map("accounts")
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique @map("session_token")
+  userId       String   @map("user_id")
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("sessions")
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+  @@map("verification_tokens")
+}
+
+model User {
+  id            String    @id @default(cuid())
+  name          String?
+  nameAr        String?   @map("name_ar")
+  email         String?   @unique
+  emailVerified DateTime? @map("email_verified")
+  password      String?
+  phone         String?   @unique
+  role          Role      @default(VIEWER)
+  isActive      Boolean   @default(false) @map("is_active")
+  avatar        String?
+  createdAt     DateTime  @default(now()) @map("created_at")
+  updatedAt     DateTime  @updatedAt @map("updated_at")
+
+  accounts            Account[]
+  sessions            Session[]
+  propertiesCreated   Property[]        @relation("PropertyCreator")
+  assignedClients     Client[]          @relation("ClientAssignee")
+  followUps           FollowUp[]        @relation("FollowUpUser")
+  viewings            Viewing[]         @relation("ViewingUser")
+  bookings            Booking[]         @relation("BookingUser")
+  deals               Deal[]            @relation("DealUser")
+  commissions         Commission[]      @relation("CommissionUser")
+  marketerProfile     Marketer?
+  campaignsCreated    Campaign[]        @relation("CampaignCreator")
+  auditLogs           AuditLog[]
+  notifications       Notification[]
+
+  @@map("users")
+}
+
+model Property {
+  id              String          @id @default(cuid())
+  title           String
+  titleAr         String?         @map("title_ar")
+  description     String?         @db.Text
+  descriptionAr   String?         @db.Text @map("description_ar")
+  type            PropertyType
+  status          PropertyStatus  @default(AVAILABLE)
+  purpose         PropertyPurpose
+  price           Decimal         @db.Decimal(12, 2)
+  priceNegotiable Boolean         @default(false) @map("price_negotiable")
+  area            Decimal         @db.Decimal(10, 2)
+  bedrooms        Int?
+  bathrooms       Int?
+  floors          Int?
+  yearBuilt       Int?            @map("year_built")
+  furnished       Boolean         @default(false)
+  amenities       Json?
+  
+  // Location
+  latitude        Float?
+  longitude       Float?
+  address         String?
+  addressAr       String?         @map("address_ar")
+  city            String?
+  district        String?
+  country         String?
+  zipCode         String?         @map("zip_code")
+
+  ownerId         String?         @map("owner_id")
+  projectId       String?         @map("project_id")
+  createdById     String          @map("created_by_id")
+
+  views           Int             @default(0)
+  isFeatured      Boolean         @default(false) @map("is_featured")
+
+  createdAt       DateTime        @default(now()) @map("created_at")
+  updatedAt       DateTime        @updatedAt @map("updated_at")
+  deletedAt       DateTime?       @map("deleted_at")
+
+  // Relations
+  owner           Owner?          @relation(fields: [ownerId], references: [id], onDelete: SetNull)
+  project         Project?        @relation(fields: [projectId], references: [id], onDelete: SetNull)
+  createdBy       User            @relation("PropertyCreator", fields: [createdById], references: [id])
+  images          PropertyImage[]
+  documents       PropertyDocument[]
+  matches         PropertyMatch[]
+  viewings        Viewing[]
+  bookings        Booking[]
+  deals           Deal[]
+
+  @@index([latitude, longitude])
+  @@index([city])
+  @@index([status])
+  @@index([type])
+  @@index([price])
+  @@map("properties")
+}
+
+model PropertyImage {
+  id         String   @id @default(cuid())
+  url        String
+  alt        String?
+  order      Int      @default(0)
+  propertyId String   @map("property_id")
+  property   Property @relation(fields: [propertyId], references: [id], onDelete: Cascade)
+
+  @@map("property_images")
+}
+
+model PropertyDocument {
+  id         String   @id @default(cuid())
+  name       String
+  url        String
+  type       String
+  propertyId String   @map("property_id")
+  property   Property @relation(fields: [propertyId], references: [id], onDelete: Cascade)
+
+  @@map("property_documents")
+}
+
+model Project {
+  id              String   @id @default(cuid())
+  name            String
+  nameAr          String?  @map("name_ar")
+  description     String?  @db.Text
+  descriptionAr   String?  @db.Text @map("description_ar")
+  developer       String?
+  status          String?
+  totalUnits      Int?     @map("total_units")
+  completedUnits  Int?     @map("completed_units")
+  startDate       DateTime? @map("start_date")
+  completionDate  DateTime? @map("completion_date")
+  
+  latitude        Float?
+  longitude       Float?
+  address         String?
+  city            String?
+  
+  images          Json?
+  properties      Property[]
+
+  @@map("projects")
+}
+
+model Owner {
+  id              String      @id @default(cuid())
+  name            String
+  nameAr          String?     @map("name_ar")
+  email           String?
+  phone           String      @unique
+  company         String?
+  type            OwnerType   @default(INDIVIDUAL)
+  notes           String?     @db.Text
+  createdAt       DateTime    @default(now()) @map("created_at")
+
+  properties      Property[]
+  brokerageContracts BrokerageContract[]
+
+  @@map("owners")
+}
+
+model BrokerageContract {
+  id              String         @id @default(cuid())
+  ownerId         String         @map("owner_id")
+  contractNumber  String         @unique @map("contract_number")
+  startDate       DateTime       @map("start_date")
+  endDate         DateTime?      @map("end_date")
+  commissionRate  Decimal?       @db.Decimal(5, 2) @map("commission_rate")
+  status          ContractStatus @default(PENDING)
+  terms           String?        @db.Text
+  document        String?        
+  createdAt       DateTime       @default(now()) @map("created_at")
+
+  owner           Owner          @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+
+  @@map("brokerage_contracts")
+}
+
+model Client {
+  id              String        @id @default(cuid())
+  name            String
+  nameAr          String?       @map("name_ar")
+  email           String?
+  phone           String        @unique
+  nationality     String?
+  source          ClientSource  @default(OTHER)
+  status          ClientStatus  @default(NEW)
+  budget          Decimal?      @db.Decimal(12, 2)
+  preferredType   PropertyType? @map("preferred_type")
+  preferredCity   String?       @map("preferred_city")
+  preferredDistrict String?     @map("preferred_district")
+  notes           String?       @db.Text
+  assignedToId    String?       @map("assigned_to_id")
+  marketerId      String?       @map("marketer_id")
+  createdAt       DateTime      @default(now()) @map("created_at")
+
+  assignedTo      User?         @relation("ClientAssignee", fields: [assignedToId], references: [id], onDelete: SetNull)
+  marketer        Marketer?     @relation("MarketerClients", fields: [marketerId], references: [id], onDelete: SetNull)
+  
+  requests        ClientRequest[]
+  followUps       FollowUp[]
+  viewings        Viewing[]
+  bookings        Booking[]
+  deals           Deal[]
+
+  @@index([status])
+  @@index([source])
+  @@map("clients")
+}
+
+model ClientRequest {
+  id            String         @id @default(cuid())
+  clientId      String         @map("client_id")
+  propertyType  PropertyType?  @map("property_type")
+  purpose       PropertyPurpose?
+  minPrice      Decimal?       @db.Decimal(12, 2) @map("min_price")
+  maxPrice      Decimal?       @db.Decimal(12, 2) @map("max_price")
+  minArea       Decimal?       @db.Decimal(10, 2) @map("min_area")
+  maxArea       Decimal?       @db.Decimal(10, 2) @map("max_area")
+  bedrooms      Int?
+  city          String?
+  district      String?
+  features      Json?
+  status        String         @default("ACTIVE")
+  createdAt     DateTime       @default(now()) @map("created_at")
+
+  client        Client         @relation(fields: [clientId], references: [id], onDelete: Cascade)
+  matches       PropertyMatch[]
+
+  @@map("client_requests")
+}
+
+model PropertyMatch {
+  id              String      @id @default(cuid())
+  clientRequestId String      @map("client_request_id")
+  propertyId      String      @map("property_id")
+  score           Float?
+  status          MatchStatus @default(PENDING)
+  sentAt          DateTime?   @map("sent_at")
+  viewedAt        DateTime?   @map("viewed_at")
+  clientResponse  String?     @db.Text @map("client_response")
+
+  clientRequest   ClientRequest @relation(fields: [clientRequestId], references: [id], onDelete: Cascade)
+  property        Property      @relation(fields: [propertyId], references: [id], onDelete: Cascade)
+
+  @@unique([clientRequestId, propertyId])
+  @@map("property_matches")
+}
+
+model FollowUp {
+  id              String         @id @default(cuid())
+  clientId        String         @map("client_id")
+  userId          String         @map("user_id")
+  type            FollowUpType
+  title           String?
+  notes           String?        @db.Text
+  scheduledAt     DateTime       @map("scheduled_at")
+  completedAt     DateTime?      @map("completed_at")
+  status          FollowUpStatus @default(PENDING)
+  outcome         String?        @db.Text
+  nextFollowUpDate DateTime?     @map("next_follow_up_date")
+
+  client          Client         @relation(fields: [clientId], references: [id], onDelete: Cascade)
+  user            User           @relation("FollowUpUser", fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([scheduledAt])
+  @@index([status])
+  @@map("follow_ups")
+}
+
+model Viewing {
+  id              String      @id @default(cuid())
+  clientId        String      @map("client_id")
+  propertyId      String      @map("property_id")
+  userId          String      @map("user_id")
+  scheduledAt     DateTime    @map("scheduled_at")
+  status          String      @default("SCHEDULED")
+  notes           String?     @db.Text
+  outcome         String?     @db.Text
+
+  client          Client      @relation(fields: [clientId], references: [id], onDelete: Cascade)
+  property        Property    @relation(fields: [propertyId], references: [id], onDelete: Cascade)
+  user            User        @relation("ViewingUser", fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("viewings")
+}
+
+model Booking {
+  id              String        @id @default(cuid())
+  clientId        String        @map("client_id")
+  propertyId      String        @map("property_id")
+  userId          String        @map("user_id")
+  amount          Decimal       @db.Decimal(12, 2)
+  status          BookingStatus @default(PENDING)
+  paymentMethod   String?       @map("payment_method")
+  notes           String?       @db.Text
+  createdAt       DateTime      @default(now()) @map("created_at")
+
+  client          Client        @relation(fields: [clientId], references: [id], onDelete: Cascade)
+  property        Property      @relation(fields: [propertyId], references: [id], onDelete: Cascade)
+  user            User          @relation("BookingUser", fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("bookings")
+}
+
+model Deal {
+  id              String     @id @default(cuid())
+  clientId        String     @map("client_id")
+  propertyId      String     @map("property_id")
+  userId          String     @map("user_id")
+  amount          Decimal    @db.Decimal(12, 2)
+  commissionTotal Decimal?   @db.Decimal(12, 2) @map("commission_total")
+  status          DealStatus @default(NEGOTIATION)
+  contractNumber  String?    @unique @map("contract_number")
+  contractDate    DateTime?  @map("contract_date")
+  closedAt        DateTime?  @map("closed_at")
+  notes           String?    @db.Text
+
+  client          Client     @relation(fields: [clientId], references: [id], onDelete: Cascade)
+  property        Property   @relation(fields: [propertyId], references: [id], onDelete: Cascade)
+  user            User       @relation("DealUser", fields: [userId], references: [id], onDelete: Cascade)
+  commissions     Commission[]
+
+  @@map("deals")
+}
+
+model Commission {
+  id              String           @id @default(cuid())
+  dealId          String           @map("deal_id")
+  userId          String           @map("user_id")
+  type            CommissionType
+  amount          Decimal          @db.Decimal(12, 2)
+  percentage      Decimal?         @db.Decimal(5, 2)
+  status          CommissionStatus @default(PENDING)
+  paidAt          DateTime?        @map("paid_at")
+  notes           String?          @db.Text
+
+  deal            Deal             @relation(fields: [dealId], references: [id], onDelete: Cascade)
+  user            User             @relation("CommissionUser", fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("commissions")
+}
+
+model Marketer {
+  id              String         @id @default(cuid())
+  userId          String?        @unique @map("user_id")
+  name            String
+  phone           String         @unique
+  email           String?
+  type            MarketerType
+  status          MarketerStatus @default(ACTIVE)
+  totalReferrals  Int            @default(0) @map("total_referrals")
+  totalCommission Decimal        @default(0) @db.Decimal(12, 2) @map("total_commission")
+  commissionRate  Decimal?       @db.Decimal(5, 2) @map("commission_rate")
+  bankAccount     String?        @map("bank_account")
+  notes           String?        @db.Text
+
+  user            User?          @relation(fields: [userId], references: [id], onDelete: SetNull)
+  protectedClients Client[]      @relation("MarketerClients")
+
+  @@map("marketers")
+}
+
+model Campaign {
+  id              String           @id @default(cuid())
+  name            String
+  platform        CampaignPlatform
+  status          CampaignStatus   @default(PLANNED)
+  budget          Decimal?         @db.Decimal(12, 2)
+  spent           Decimal          @default(0) @db.Decimal(12, 2)
+  startDate       DateTime?        @map("start_date")
+  endDate         DateTime?        @map("end_date")
+  leads           Int              @default(0)
+  conversions     Int              @default(0)
+  costPerLead     Decimal?         @db.Decimal(10, 2) @map("cost_per_lead")
+  conversionRate  Decimal?         @db.Decimal(5, 2) @map("conversion_rate")
+  targetAudience  String?          @db.Text @map("target_audience")
+  notes           String?          @db.Text
+  createdById     String           @map("created_by_id")
+
+  createdBy       User             @relation("CampaignCreator", fields: [createdById], references: [id])
+
+  @@map("campaigns")
+}
+
+model AuditLog {
+  id              String    @id @default(cuid())
+  userId          String?   @map("user_id")
+  action          String
+  entity          String
+  entityId        String    @map("entity_id")
+  oldValue        Json?     @map("old_value")
+  newValue        Json?     @map("new_value")
+  ipAddress       String?   @map("ip_address")
+  createdAt       DateTime  @default(now()) @map("created_at")
+
+  user            User?     @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  @@index([entity, entityId])
+  @@map("audit_logs")
+}
+
+model Notification {
+  id              String   @id @default(cuid())
+  userId          String   @map("user_id")
+  title           String
+  titleAr         String?  @map("title_ar")
+  message         String   @db.Text
+  messageAr       String?  @db.Text @map("message_ar")
+  type            String
+  isRead          Boolean  @default(false) @map("is_read")
+  link            String?
+  createdAt       DateTime @default(now()) @map("created_at")
+
+  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, isRead])
+  @@map("notifications")
+}
