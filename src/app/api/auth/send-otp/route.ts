@@ -52,7 +52,7 @@ export async function POST(req: NextRequest) {
                   <p style="color: #71717a; font-size: 12px; margin-top: 15px;">صلاحية هذا الرمز 10 دقائق. يرجى عدم مشاركته مع أي شخص.</p>
                 </div>
                 <div style="text-align: center; margin-top: 25px; color: #71717a; font-size: 11px;">
-                  تم إرسال هذه الرسالة تلقائياً من: <strong>${senderEmail}</strong>
+                  تم إرسال هذه الرسالة تلقائياً من <strong>خريطة سيما العقارية</strong>
                 </div>
               </div>
             `,

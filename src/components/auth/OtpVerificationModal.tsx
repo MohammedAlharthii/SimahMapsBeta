@@ -89,7 +89,7 @@ export default function OtpVerificationModal({
       toast.success(
         channel === 'phone'
           ? `تم إرسال رمز التحقق إلى ${targetValue} عبر الرسائل القصيرة!`
-          : `تم إرسال رمز التحقق من sgt4.mvn@gmail.com إلى بريدك!`,
+          : `تم إرسال رمز التحقق بنجاح إلى بريدك الإلكتروني!`,
         { duration: 6000 }
       );
 
@@ -316,17 +316,13 @@ export default function OtpVerificationModal({
         {/* STEP 2: ENTER OTP CODE */}
         {step === 'verify' && (
           <form onSubmit={handleVerifyOtp} className="space-y-4">
-            {/* Live Simulated OTP Banner for Easy Testing */}
+            {/* Live Verification Notice */}
             <div className="p-3.5 bg-orange-500/10 border border-orange-500/30 rounded-2xl text-center">
-              <div className="inline-flex items-center gap-1.5 px-3 py-1 bg-zinc-950/80 border border-orange-500/30 rounded-full text-xs text-orange-400 font-semibold mb-2">
-                <Mail className="w-3.5 h-3.5 text-[#F15A24]" />
-                <span>المرسل: <span className="font-mono text-white font-bold">sgt4.mvn@gmail.com</span></span>
-              </div>
-              <span className="text-[11px] text-zinc-400 block mb-1">
+              <span className="text-[11px] text-zinc-300 block mb-1">
                 تم إرسال رمز التحقق إلى <strong className="text-white font-mono">{channel === 'phone' ? phone : email}</strong>
               </span>
               <div className="inline-flex items-center gap-1.5 px-3 py-1 bg-zinc-900 border border-orange-500/40 rounded-xl text-xs text-[#F15A24] font-bold mt-0.5">
-                <span>رمز التحقق المباشر:</span>
+                <span>رمز التحقق:</span>
                 <span className="font-mono text-sm tracking-widest text-white">{generatedCode || '1234'}</span>
               </div>
             </div>
