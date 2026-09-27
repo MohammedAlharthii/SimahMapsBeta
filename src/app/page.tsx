@@ -6,6 +6,7 @@ import PropertySearch from '@/components/search/PropertySearch';
 import { useSession, signOut } from 'next-auth/react';
 import { LayoutDashboard, LogOut, LogIn, Crown, User as UserIcon } from 'lucide-react';
 import Link from 'next/link';
+import LoginGate from '@/components/auth/LoginGate';
 
 // Sample properties with coordinates
 // Sample properties with coordinates
@@ -188,6 +189,22 @@ export default function HomePage() {
 
   const userRole = (session?.user as any)?.role;
   const isStaff = userRole && userRole !== 'CLIENT';
+
+  if (status === 'loading') {
+    return (
+      <div className="flex h-screen w-screen items-center justify-center bg-[#09090B]">
+        <div className="flex flex-col items-center gap-4">
+          <img src="/logo.png" alt="خريطة سيما" className="h-16 w-auto animate-pulse" />
+          <div className="w-8 h-8 border-2 border-[#F15A24] border-t-transparent rounded-full animate-spin" />
+          <span className="text-zinc-400 text-xs">جاري تحميل خريطة سيما...</span>
+        </div>
+      </div>
+    );
+  }
+
+  if (!session?.user) {
+    return <LoginGate onSuccess={() => window.location.reload()} />;
+  }
 
   return (
     <div className="flex flex-col h-screen w-screen overflow-hidden bg-[#09090B] text-zinc-100">

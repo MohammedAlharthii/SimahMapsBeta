@@ -55,7 +55,7 @@ export default function LoginGate({ onSuccess }: LoginGateProps) {
             : 'بيانات الدخول غير صحيحة أو الحساب غير مفعل'
         );
       } else {
-        toast.success('تم تسجيل الدخول بنجاح! أهلاً بك في سيما العقارية');
+        toast.success('تم تسجيل الدخول بنجاح! أهلاً بك في خريطة سيما');
         if (onSuccess) onSuccess();
       }
     } catch (err) {
@@ -133,13 +133,13 @@ export default function LoginGate({ onSuccess }: LoginGateProps) {
             <div className="absolute -inset-2 bg-gradient-to-r from-[#F15A24]/30 to-amber-500/20 rounded-2xl blur-lg opacity-70 group-hover:opacity-100 transition-opacity" />
             <img
               src="/logo.png"
-              alt="سيما العقارية"
+              alt="خريطة سيما"
               className="relative h-20 w-auto object-contain drop-shadow-2xl transition-transform duration-300 group-hover:scale-105"
             />
           </div>
 
           <div className="flex items-center gap-2 mb-1">
-            <h1 className="text-2xl font-black text-white tracking-tight">سـيـمـا العقارية</h1>
+            <h1 className="text-2xl font-black text-white tracking-tight">خريطة سيما</h1>
           </div>
           <p className="text-xs text-zinc-400 max-w-sm">
             بوابة الدخول الموحدة لمنظومة التسويق العقاري والخريطة الذكية
@@ -388,7 +388,7 @@ export default function LoginGate({ onSuccess }: LoginGateProps) {
 
                 <div className="p-2.5 rounded-xl bg-amber-500/10 border border-amber-500/20 text-amber-300 text-[11px] flex items-start gap-2">
                   <Sparkles className="w-3.5 h-3.5 mt-0.5 shrink-0 text-amber-400" />
-                  <span>ملاحظة: التسجيل يخضع للمراجعة والاعتماد من إدارة شركة سيما العقارية قبل التفعيل.</span>
+                  <span>ملاحظة: التسجيل يخضع للمراجعة والاعتماد من إدارة خريطة سيما قبل التفعيل.</span>
                 </div>
 
                 <button

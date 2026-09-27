@@ -16,13 +16,15 @@ import {
   Settings,
   Menu,
   ChevronRight,
-  MapPin
+  MapPin,
+  Eye
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const navItems = [
   { name: "لوحة التحكم", href: "/dashboard", icon: LayoutDashboard },
-  { name: "خريطة العقارات", href: "/", icon: MapPin },
+  { name: "خريطة سيما", href: "/", icon: MapPin },
+  { name: "مشاهدات الإعلانات (OTP)", href: "/dashboard/ad-views", icon: Eye },
   { name: "العقارات", href: "/dashboard/properties", icon: Building2 },
   { name: "العملاء", href: "/dashboard/clients", icon: Users },
   { name: "الصفقات", href: "/dashboard/deals", icon: Handshake },
@@ -51,11 +53,11 @@ export function Sidebar() {
           <Link href="/" className="flex items-center gap-2.5 overflow-hidden">
             <img
               src="/logo.png"
-              alt="سيما العقارية"
+              alt="خريطة سيما"
               className="h-9 w-auto object-contain shrink-0"
             />
             <div className="flex flex-col">
-              <span className="font-extrabold text-white text-base leading-tight">سـيـمـا العقارية</span>
+              <span className="font-extrabold text-white text-base leading-tight">خريطة سيما</span>
               <span className="text-[10px] text-zinc-400 font-medium">نظام التشغيل العقاري</span>
             </div>
           </Link>

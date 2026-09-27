@@ -46,6 +46,26 @@ export default function PropertyDetailsPage() {
   // OTP Verification state for unauthenticated visitors
   const [otpVerified, setOtpVerified] = useState(false);
 
+  const handleOtpVerified = async (contact: { type: 'phone' | 'email'; value: string }) => {
+    setOtpVerified(true);
+    try {
+      await fetch('/api/properties/view-log', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          propertyId: id,
+          propertyTitle: property?.titleAr || property?.title || 'عرض عقاري',
+          propertyPrice: property?.price || 0,
+          contact: contact.value,
+          channel: contact.type,
+          verified: true,
+        }),
+      });
+    } catch (err) {
+      console.warn('Failed to record ad view log:', err);
+    }
+  };
+
   useEffect(() => {
     if (typeof window !== 'undefined') {
       const verified = sessionStorage.getItem('sima_otp_verified') === 'true';
@@ -157,7 +177,7 @@ export default function PropertyDetailsPage() {
           offerTitle={displayTitle}
           offerPrice={property.price}
           isOpen={true}
-          onVerified={() => setOtpVerified(true)}
+          onVerified={handleOtpVerified}
         />
       )}
 
