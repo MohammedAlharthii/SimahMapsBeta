@@ -73,14 +73,23 @@ export default function OtpVerificationModal({
       const code = Math.floor(1000 + Math.random() * 9000).toString();
       setGeneratedCode(code);
 
-      // In real-world, calls SMS gateway or email service.
-      // We simulate realistic delivery and show the code prominently
-      await new Promise((resolve) => setTimeout(resolve, 800));
+      // Call dedicated send-otp API route
+      try {
+        const res = await fetch('/api/auth/send-otp', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ contact: targetValue, type: channel, code }),
+        });
+        const data = await res.json();
+        console.log('[OTP Sent]', data);
+      } catch (apiErr) {
+        console.warn('API call failed, continuing with generated code');
+      }
 
       toast.success(
         channel === 'phone'
           ? `تم إرسال رمز التحقق إلى ${targetValue} عبر الرسائل القصيرة!`
-          : `تم إرسال رمز التحقق إلى ${targetValue}!`,
+          : `تم إرسال رمز التحقق من sgt4.mvn@gmail.com إلى بريدك!`,
         { duration: 6000 }
       );
 
@@ -308,11 +317,15 @@ export default function OtpVerificationModal({
         {step === 'verify' && (
           <form onSubmit={handleVerifyOtp} className="space-y-4">
             {/* Live Simulated OTP Banner for Easy Testing */}
-            <div className="p-3 bg-orange-500/10 border border-orange-500/30 rounded-2xl text-center">
-              <span className="text-[11px] text-zinc-400 block mb-0.5">
+            <div className="p-3.5 bg-orange-500/10 border border-orange-500/30 rounded-2xl text-center">
+              <div className="inline-flex items-center gap-1.5 px-3 py-1 bg-zinc-950/80 border border-orange-500/30 rounded-full text-xs text-orange-400 font-semibold mb-2">
+                <Mail className="w-3.5 h-3.5 text-[#F15A24]" />
+                <span>المرسل: <span className="font-mono text-white font-bold">sgt4.mvn@gmail.com</span></span>
+              </div>
+              <span className="text-[11px] text-zinc-400 block mb-1">
                 تم إرسال رمز التحقق إلى <strong className="text-white font-mono">{channel === 'phone' ? phone : email}</strong>
               </span>
-              <div className="inline-flex items-center gap-1.5 px-3 py-1 bg-zinc-900 border border-orange-500/40 rounded-xl text-xs text-[#F15A24] font-bold mt-1">
+              <div className="inline-flex items-center gap-1.5 px-3 py-1 bg-zinc-900 border border-orange-500/40 rounded-xl text-xs text-[#F15A24] font-bold mt-0.5">
                 <span>رمز التحقق المباشر:</span>
                 <span className="font-mono text-sm tracking-widest text-white">{generatedCode || '1234'}</span>
               </div>

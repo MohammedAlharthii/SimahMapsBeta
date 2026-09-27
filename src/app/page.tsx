@@ -8,6 +8,7 @@ import { LayoutDashboard, LogOut, LogIn, Crown, User as UserIcon } from 'lucide-
 import Link from 'next/link';
 
 // Sample properties with coordinates
+// Sample properties with coordinates
 const fallbackProperties: Property[] = [
   {
     id: '1',
@@ -29,33 +30,33 @@ const fallbackProperties: Property[] = [
   },
   {
     id: '2',
-    title: 'Luxury Apartment Downtown',
-    titleAr: 'شقة فاخرة بإطلالة بانورامية',
-    price: 850000,
-    area: 150,
-    bedrooms: 3,
-    bathrooms: 2,
-    type: 'APARTMENT',
+    title: 'Commercial Investment Building',
+    titleAr: 'عمارة تجارية استثمارية بالرياض',
+    price: 4850000,
+    area: 950,
+    bedrooms: 0,
+    bathrooms: 8,
+    type: 'BUILDING',
     status: 'AVAILABLE',
     purpose: 'SALE',
     latitude: 24.7236,
     longitude: 46.6853,
     address: 'حي الملز، طريق الملك عبدالعزيز',
     city: 'الرياض',
-    images: [{ url: 'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=800', alt: 'Apartment' }],
+    images: [{ url: 'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=800', alt: 'Building' }],
     isFeatured: false
   },
   {
     id: '3',
     title: 'Commercial Office Space',
-    titleAr: 'مكتب تجاري بتشطيبات ذكية',
-    price: 120000,
-    area: 200,
+    titleAr: 'مقر مكتبي تجاري بتشطيبات ذكية',
+    price: 1850000,
+    area: 320,
     bedrooms: 0,
-    bathrooms: 2,
+    bathrooms: 3,
     type: 'OFFICE',
     status: 'AVAILABLE',
-    purpose: 'RENT',
+    purpose: 'SALE',
     latitude: 24.6936,
     longitude: 46.6553,
     address: 'حي الغدير، برج الأعمال',
@@ -65,20 +66,20 @@ const fallbackProperties: Property[] = [
   },
   {
     id: '4',
-    title: 'Residential Land Plot',
-    titleAr: 'أرض سكنية في موقع متميز',
-    price: 500000,
+    title: 'Luxury Villa Compound',
+    titleAr: 'فيلا قصر مودرن شمال الرياض',
+    price: 3600000,
     area: 600,
-    bedrooms: 0,
-    bathrooms: 0,
-    type: 'LAND',
+    bedrooms: 6,
+    bathrooms: 5,
+    type: 'VILLA',
     status: 'AVAILABLE',
     purpose: 'SALE',
     latitude: 24.6836,
     longitude: 46.7253,
     address: 'حي النرجس، شمال الرياض',
     city: 'الرياض',
-    images: [{ url: 'https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=800', alt: 'Land' }],
+    images: [{ url: 'https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=800', alt: 'Villa' }],
     isFeatured: false
   },
   {
@@ -197,15 +198,15 @@ export default function HomePage() {
             {/* Highly visible logo */}
             <img
               src="/logo.png"
-              alt="سيما العقارية"
+              alt="خريطة سيما"
               className="h-11 md:h-12 w-auto object-contain drop-shadow-md transition-transform group-hover:scale-105"
             />
             <div className="flex flex-col">
               <span className="text-lg md:text-xl font-black tracking-tight text-white transition-colors">
-                سـيـمـا العقارية
+                خريطة سيما
               </span>
               <span className="text-[10px] text-zinc-400 font-medium hidden sm:inline">
-                منصة التسويق العقاري والخريطة الذكية
+                خريطة الصكوك والعروض العقارية المباشرة
               </span>
             </div>
           </Link>

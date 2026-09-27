@@ -4,7 +4,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import { useRouter } from 'next/navigation';
-import { Moon, Sun, Layers } from 'lucide-react';
+import { Moon, Sun, Layers, Globe } from 'lucide-react';
 
 export interface Property {
   id: string;
@@ -35,6 +35,17 @@ interface PropertyMapProps {
 
 const CARTO_API_KEY = 'cb1_3w2i_1_0086e70d092d4c1ac7eb1dc2';
 
+function getTileUrl(theme: 'dark' | 'voyager' | 'satellite') {
+  if (theme === 'satellite') {
+    // High-definition Google Satellite with terrain and labels
+    return 'https://mt1.google.com/vt/lyrs=y&x={x}&y={y}&z={z}';
+  }
+  if (theme === 'voyager') {
+    return `https://basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}.png?key=${CARTO_API_KEY}`;
+  }
+  return `https://basemaps.cartocdn.com/rastertiles/dark_all/{z}/{x}/{y}.png?key=${CARTO_API_KEY}`;
+}
+
 export default function LeafletMap({
   properties,
   onPropertySelect,
@@ -46,7 +57,7 @@ export default function LeafletMap({
   const mapInstanceRef = useRef<L.Map | null>(null);
   const tileLayerRef = useRef<L.TileLayer | null>(null);
   const markersLayerRef = useRef<L.LayerGroup | null>(null);
-  const [mapTheme, setMapTheme] = useState<'dark' | 'voyager'>('dark');
+  const [mapTheme, setMapTheme] = useState<'dark' | 'voyager' | 'satellite'>('dark');
   const router = useRouter();
 
   // 1. Initialize Map
@@ -61,12 +72,11 @@ export default function LeafletMap({
       attributionControl: false,
     });
 
-    // Carto Tile URL using valid ?key= parameter
-    const initialUrl = `https://basemaps.cartocdn.com/rastertiles/${mapTheme === 'dark' ? 'dark_all' : 'voyager'}/{z}/{x}/{y}.png?key=${CARTO_API_KEY}`;
+    const initialUrl = getTileUrl(mapTheme);
 
     const tileLayer = L.tileLayer(initialUrl, {
-      maxZoom: 19,
-      attribution: '&copy; CARTO &copy; OpenStreetMap',
+      maxZoom: 20,
+      attribution: '&copy; خريطة سيما',
     }).addTo(map);
 
     tileLayerRef.current = tileLayer;
@@ -88,10 +98,10 @@ export default function LeafletMap({
     };
   }, []);
 
-  // 2. Switch Map Theme between Carto Dark Matter and Carto Voyager
+  // 2. Switch Map Theme between Carto Dark, Voyager, and Satellite
   useEffect(() => {
     if (!tileLayerRef.current) return;
-    const newUrl = `https://basemaps.cartocdn.com/rastertiles/${mapTheme === 'dark' ? 'dark_all' : 'voyager'}/{z}/{x}/{y}.png?key=${CARTO_API_KEY}`;
+    const newUrl = getTileUrl(mapTheme);
     tileLayerRef.current.setUrl(newUrl);
   }, [mapTheme]);
 
@@ -195,7 +205,19 @@ export default function LeafletMap({
       <div ref={mapContainerRef} className="w-full h-full z-0" />
 
       {/* Floating Theme Switcher on Map */}
-      <div className="absolute top-4 left-4 z-10 flex items-center bg-zinc-950/90 backdrop-blur-md rounded-2xl border border-zinc-800 p-1 shadow-2xl">
+      <div className="absolute top-4 left-4 z-10 flex items-center bg-zinc-950/95 backdrop-blur-md rounded-2xl border border-zinc-800 p-1 shadow-2xl">
+        <button
+          onClick={() => setMapTheme('satellite')}
+          className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold transition-all ${
+            mapTheme === 'satellite'
+              ? 'bg-[#F15A24] text-white shadow-md shadow-orange-500/30'
+              : 'text-zinc-400 hover:text-white'
+          }`}
+          title="استعراض تضاريس وطبيعة الأرض عبر الأقمار الصناعية"
+        >
+          <Globe className="w-3.5 h-3.5" />
+          <span>🛰️ ساتالايت (طبيعة الأرض)</span>
+        </button>
         <button
           onClick={() => setMapTheme('dark')}
           className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold transition-all ${
@@ -216,16 +238,18 @@ export default function LeafletMap({
           }`}
         >
           <Sun className="w-3.5 h-3.5" />
-          <span>ملون Voyager</span>
+          <span>شوارع Voyager</span>
         </button>
       </div>
 
       {/* Floating Map Branding Watermark */}
       <div className="absolute bottom-4 left-4 z-10 pointer-events-none flex items-center gap-2 bg-zinc-950/85 backdrop-blur-md px-3.5 py-1.5 rounded-full border border-zinc-800 text-xs text-zinc-400 shadow-xl">
         <span className="w-2 h-2 rounded-full bg-[#F15A24] animate-pulse"></span>
-        <span className="font-bold text-zinc-200">سـيـمـا العقارية</span>
+        <span className="font-bold text-zinc-200">خريطة سيما</span>
         <span className="text-zinc-600">|</span>
-        <span className="text-[11px] text-zinc-400">Carto Basemaps Key Active</span>
+        <span className="text-[11px] text-zinc-400">
+          {mapTheme === 'satellite' ? 'بث الأقمار الصناعية عالي الدقة' : 'خريطة الصكوك والمخططات'}
+        </span>
       </div>
     </div>
   );

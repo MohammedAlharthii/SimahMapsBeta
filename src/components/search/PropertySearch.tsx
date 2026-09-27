@@ -14,10 +14,8 @@ interface PropertySearchProps {
 const propertyTypes = [
   { id: 'ALL', labelAr: 'الكل', labelEn: 'All', icon: Building },
   { id: 'VILLA', labelAr: 'فلل', labelEn: 'Villas', icon: Home },
-  { id: 'APARTMENT', labelAr: 'شقق', labelEn: 'Apartments', icon: Building },
-  { id: 'LAND', labelAr: 'أراضي', labelEn: 'Lands', icon: LandPlot },
-  { id: 'OFFICE', labelAr: 'مكاتب', labelEn: 'Offices', icon: Briefcase },
   { id: 'BUILDING', labelAr: 'عمائر', labelEn: 'Buildings', icon: Warehouse },
+  { id: 'OFFICE', labelAr: 'مكاتب', labelEn: 'Offices', icon: Briefcase },
 ];
 
 export default function PropertySearch({
@@ -29,7 +27,7 @@ export default function PropertySearch({
   const isAr = lang === 'ar';
   const [query, setQuery] = useState('');
   const [activeType, setActiveType] = useState('ALL');
-  const [activePurpose, setActivePurpose] = useState<'ALL' | 'SALE' | 'RENT'>('ALL');
+  const [activePurpose, setActivePurpose] = useState<'ALL' | 'SALE'>('ALL');
 
   const handleQueryChange = (val: string) => {
     setQuery(val);
@@ -41,7 +39,7 @@ export default function PropertySearch({
     onTypeFilter?.(id === 'ALL' ? null : id);
   };
 
-  const handlePurposeSelect = (purpose: 'ALL' | 'SALE' | 'RENT') => {
+  const handlePurposeSelect = (purpose: 'ALL' | 'SALE') => {
     setActivePurpose(purpose);
     onPurposeFilter?.(purpose === 'ALL' ? null : purpose);
   };
@@ -76,7 +74,7 @@ export default function PropertySearch({
             </button>
           </div>
 
-          {/* Purpose Tabs (Sale / Rent) */}
+          {/* Purpose Tabs (Sale Only) */}
           <div className="flex items-center gap-1 bg-zinc-900 border border-zinc-800 p-1 rounded-full shrink-0">
             <button
               onClick={() => handlePurposeSelect('ALL')}
@@ -98,18 +96,7 @@ export default function PropertySearch({
                   : "text-zinc-400 hover:text-zinc-200"
               )}
             >
-              {isAr ? 'شراء' : 'Buy'}
-            </button>
-            <button
-              onClick={() => handlePurposeSelect('RENT')}
-              className={cn(
-                "px-3 py-1 rounded-full text-xs font-semibold transition-all",
-                activePurpose === 'RENT'
-                  ? "bg-[#F15A24] text-white shadow-md shadow-orange-500/20"
-                  : "text-zinc-400 hover:text-zinc-200"
-              )}
-            >
-              {isAr ? 'إيجار' : 'Rent'}
+              {isAr ? 'شراء / بيع' : 'Buy / Sale'}
             </button>
           </div>
         </div>

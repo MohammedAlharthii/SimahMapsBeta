@@ -10,10 +10,10 @@ import AuthProvider from "@/components/providers/AuthProvider";
 const notoSansArabic = Noto_Kufi_Arabic({ subsets: ["arabic"] });
 
 export const metadata: Metadata = {
-  title: "سيما العقارية | SIMA Real Estate",
-  description: "منصة ذكية متكاملة لإدارة التسويق العقاري وعرض العقارات على الخريطة التفاعلية",
+  title: "خريطة سيما | SIMA Maps",
+  description: "خريطة سيما العقارية التفاعلية لاستعراض العقارات ومخططات الأراضي الجوية",
   icons: {
-    icon: "/logo.jpg",
+    icon: "/logo.png",
   },
 };
 

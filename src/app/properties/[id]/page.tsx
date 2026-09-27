@@ -139,7 +139,7 @@ export default function PropertyDetailsPage() {
     ? property.images
     : [{ url: 'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=800', alt: property.title }];
 
-  const purposeAr = property.purpose === 'SALE' || property.purpose === 'sale' ? 'للبيع' : 'للإيجار';
+  const purposeAr = 'للبيع';
   const displayTitle = property.titleAr || property.title;
   const displayDesc = property.descriptionAr || property.description || 'عقار مميز بموقع استراتيجي وتشطيبات عصرية تلبي تطلعاتك.';
   const amenitiesList = Array.isArray(property.amenities)
@@ -170,17 +170,17 @@ export default function PropertyDetailsPage() {
               className="flex items-center gap-1.5 text-xs font-semibold text-white hover:text-[#F15A24] bg-zinc-900 border border-zinc-800 px-3.5 py-2 rounded-xl transition-all"
             >
               <ArrowRight className="w-4 h-4 text-white" />
-              <span>العودة إلى الخريطة</span>
+              <span>العودة إلى خريطة سيما</span>
             </Link>
 
             {/* Clean SIMA logo without box or frame, orange SIMA word removed */}
             <Link href="/" className="flex items-center gap-2 group">
               <img
                 src="/logo.png"
-                alt="سيما العقارية"
+                alt="خريطة سيما"
                 className="h-10 md:h-12 w-auto object-contain drop-shadow-md transition-transform group-hover:scale-105"
               />
-              <span className="font-extrabold text-white text-base hidden sm:inline">سـيـمـا العقارية</span>
+              <span className="font-extrabold text-white text-base hidden sm:inline">خريطة سيما</span>
             </Link>
           </div>
 
