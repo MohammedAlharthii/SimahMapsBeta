@@ -21,7 +21,7 @@ const fallbackProperties: Property[] = [
     bathrooms: 4,
     type: 'VILLA',
     status: 'AVAILABLE',
-    purpose: 'SALE',
+    purpose: 'SIMA',
     latitude: 24.7136,
     longitude: 46.6753,
     address: 'حي العليا، شارع التحلية',
@@ -39,7 +39,7 @@ const fallbackProperties: Property[] = [
     bathrooms: 8,
     type: 'BUILDING',
     status: 'AVAILABLE',
-    purpose: 'SALE',
+    purpose: 'PARTNER',
     latitude: 24.7236,
     longitude: 46.6853,
     address: 'حي الملز، طريق الملك عبدالعزيز',
@@ -57,7 +57,7 @@ const fallbackProperties: Property[] = [
     bathrooms: 3,
     type: 'OFFICE',
     status: 'AVAILABLE',
-    purpose: 'SALE',
+    purpose: 'SIMA',
     latitude: 24.6936,
     longitude: 46.6553,
     address: 'حي الغدير، برج الأعمال',
@@ -75,7 +75,7 @@ const fallbackProperties: Property[] = [
     bathrooms: 5,
     type: 'VILLA',
     status: 'AVAILABLE',
-    purpose: 'SALE',
+    purpose: 'PARTNER',
     latitude: 24.6836,
     longitude: 46.7253,
     address: 'حي النرجس، شمال الرياض',
@@ -93,7 +93,7 @@ const fallbackProperties: Property[] = [
     bathrooms: 6,
     type: 'VILLA',
     status: 'AVAILABLE',
-    purpose: 'SALE',
+    purpose: 'SIMA',
     latitude: 21.5433,
     longitude: 39.1728,
     address: 'حي الشاطئ، كورنيش جدة',
@@ -147,7 +147,7 @@ export default function HomePage() {
               bathrooms: p.bathrooms || 0,
               type: p.type,
               status: p.status,
-              purpose: p.purpose,
+              purpose: (p.purpose === 'INVESTMENT' || p.purpose === 'PARTNER') ? 'PARTNER' : 'SIMA',
               latitude: p.latitude || 24.7136,
               longitude: p.longitude || 46.6753,
               address: p.address || p.city || 'الرياض',
@@ -180,8 +180,14 @@ export default function HomePage() {
       if (selectedType && p.type.toUpperCase() !== selectedType.toUpperCase()) {
         return false;
       }
-      if (selectedPurpose && p.purpose.toUpperCase() !== selectedPurpose.toUpperCase()) {
-        return false;
+      if (selectedPurpose) {
+        const isPartner = p.purpose?.toUpperCase() === 'PARTNER' || p.purpose?.toUpperCase() === 'INVESTMENT';
+        if (selectedPurpose === 'PARTNER' && !isPartner) {
+          return false;
+        }
+        if (selectedPurpose === 'SIMA' && isPartner) {
+          return false;
+        }
       }
       return true;
     });

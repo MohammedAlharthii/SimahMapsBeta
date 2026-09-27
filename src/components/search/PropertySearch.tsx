@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { Search, SlidersHorizontal, X, Building, Home, LandPlot, Briefcase, Warehouse } from 'lucide-react';
+import { Search, SlidersHorizontal, X, Building, Home, LandPlot, Briefcase, Warehouse, Sparkles, Building2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 interface PropertySearchProps {
@@ -27,7 +27,7 @@ export default function PropertySearch({
   const isAr = lang === 'ar';
   const [query, setQuery] = useState('');
   const [activeType, setActiveType] = useState('ALL');
-  const [activePurpose, setActivePurpose] = useState<'ALL' | 'SALE'>('ALL');
+  const [activePurpose, setActivePurpose] = useState<'ALL' | 'SIMA' | 'PARTNER'>('ALL');
 
   const handleQueryChange = (val: string) => {
     setQuery(val);
@@ -39,7 +39,7 @@ export default function PropertySearch({
     onTypeFilter?.(id === 'ALL' ? null : id);
   };
 
-  const handlePurposeSelect = (purpose: 'ALL' | 'SALE') => {
+  const handlePurposeSelect = (purpose: 'ALL' | 'SIMA' | 'PARTNER') => {
     setActivePurpose(purpose);
     onPurposeFilter?.(purpose === 'ALL' ? null : purpose);
   };
@@ -74,12 +74,13 @@ export default function PropertySearch({
             </button>
           </div>
 
-          {/* Purpose Tabs (Sale Only) */}
-          <div className="flex items-center gap-1 bg-zinc-900 border border-zinc-800 p-1 rounded-full shrink-0">
+          {/* Purpose Tabs: الكل / عروض سيما / عروض شركاء سيما */}
+          <div className="flex items-center gap-1.5 bg-zinc-900 border border-zinc-800 p-1 rounded-full shrink-0">
             <button
+              type="button"
               onClick={() => handlePurposeSelect('ALL')}
               className={cn(
-                "px-3 py-1 rounded-full text-xs font-semibold transition-all",
+                "px-3.5 py-1.5 rounded-full text-xs font-semibold transition-all",
                 activePurpose === 'ALL'
                   ? "bg-[#F15A24] text-white shadow-md shadow-orange-500/20"
                   : "text-zinc-400 hover:text-zinc-200"
@@ -88,15 +89,30 @@ export default function PropertySearch({
               {isAr ? 'الكل' : 'All'}
             </button>
             <button
-              onClick={() => handlePurposeSelect('SALE')}
+              type="button"
+              onClick={() => handlePurposeSelect('SIMA')}
               className={cn(
-                "px-3 py-1 rounded-full text-xs font-semibold transition-all",
-                activePurpose === 'SALE'
+                "flex items-center gap-1 px-3.5 py-1.5 rounded-full text-xs font-semibold transition-all",
+                activePurpose === 'SIMA'
                   ? "bg-[#F15A24] text-white shadow-md shadow-orange-500/20"
                   : "text-zinc-400 hover:text-zinc-200"
               )}
             >
-              {isAr ? 'شراء / بيع' : 'Buy / Sale'}
+              <Sparkles className="w-3.5 h-3.5" />
+              <span>{isAr ? 'عروض سيما' : 'SIMA Offers'}</span>
+            </button>
+            <button
+              type="button"
+              onClick={() => handlePurposeSelect('PARTNER')}
+              className={cn(
+                "flex items-center gap-1 px-3.5 py-1.5 rounded-full text-xs font-semibold transition-all",
+                activePurpose === 'PARTNER'
+                  ? "bg-amber-600 text-white shadow-md shadow-amber-600/20"
+                  : "text-zinc-400 hover:text-zinc-200"
+              )}
+            >
+              <Building2 className="w-3.5 h-3.5" />
+              <span>{isAr ? 'عروض شركاء سيما' : 'Partner Offers'}</span>
             </button>
           </div>
         </div>

@@ -1,8 +1,9 @@
 'use client';
 
 import React, { useState } from 'react';
-import { Heart, MapPin, Bed, Bath, Maximize, ChevronLeft, ChevronRight, Sparkles } from 'lucide-react';
+import { Heart, MapPin, Bed, Bath, Maximize, ChevronLeft, ChevronRight, Sparkles, Share2, Building2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import toast from 'react-hot-toast';
 import type { Property } from '../map/PropertyMap';
 
 interface PropertyCardProps {
@@ -18,7 +19,8 @@ export default function PropertyCard({ property, onClick, isSelected, lang = 'ar
 
   const isAr = lang === 'ar';
   const title = isAr ? property.titleAr || property.title : property.title;
-  const purposeAr = property.purpose === 'SALE' || property.purpose === 'sale' ? 'للبيع' : 'للإيجار';
+  const isPartner = property.purpose?.toUpperCase() === 'PARTNER' || property.purpose?.toUpperCase() === 'INVESTMENT';
+  const categoryText = isPartner ? 'عروض شركاء سيما' : 'عروض سيما';
 
   const nextImage = (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -35,6 +37,26 @@ export default function PropertyCard({ property, onClick, isSelected, lang = 'ar
   const toggleFavorite = (e: React.MouseEvent) => {
     e.stopPropagation();
     setIsFavorite(!isFavorite);
+  };
+
+  const handleCardShare = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    const typeText = property.type === 'VILLA' ? 'فيلا' : property.type === 'BUILDING' ? 'عمارة' : property.type === 'OFFICE' ? 'مكتب' : 'عقار';
+    const priceFormatted = new Intl.NumberFormat('ar-SA').format(property.price);
+    const origin = typeof window !== 'undefined' ? window.location.origin : '';
+    const shareUrl = `${origin}/properties/${property.id}`;
+    const shareMessage = `🏡 *عرض عقاري من خريطة سيما* 📍\n━━━━━━━━━━━━━━━━━━━━\n✨ *${title}*\n🏷️ التصنيف: ${categoryText} (${typeText})\n📍 الموقع: ${property.city} - ${property.address || property.city}\n📐 المساحة: ${property.area} م²\n💰 السعر: ${priceFormatted} ريال\n━━━━━━━━━━━━━━━━━━━━\n🔗 *تفاصيل العرض الكاملة والموقع على الخريطة:*\n${shareUrl}`;
+
+    if (navigator.share) {
+      navigator.share({
+        title: `عرض عقاري من سيما - ${title}`,
+        text: shareMessage,
+        url: shareUrl,
+      }).catch(() => {});
+    } else {
+      navigator.clipboard.writeText(shareMessage);
+      toast.success('تم نسخ رسالة العرض والرابط بنجاح');
+    }
   };
 
   const images = property.images && property.images.length > 0
@@ -61,19 +83,33 @@ export default function PropertyCard({ property, onClick, isSelected, lang = 'ar
 
         <div className="absolute inset-0 bg-gradient-to-t from-zinc-950/80 via-transparent to-black/30 pointer-events-none" />
 
-        {/* Favorite Button */}
-        <button
-          onClick={toggleFavorite}
-          className="absolute top-3 left-3 p-2 rounded-full bg-zinc-950/60 backdrop-blur-md border border-white/10 hover:bg-zinc-900/90 transition-all z-10 hover:scale-110 active:scale-95"
-          aria-label="Favorite"
-        >
-          <Heart className={cn("w-4 h-4 transition-colors", isFavorite ? "fill-[#F15A24] text-[#F15A24]" : "text-zinc-200")} />
-        </button>
+        {/* Favorite & Share Buttons */}
+        <div className="absolute top-3 left-3 flex items-center gap-1.5 z-10">
+          <button
+            onClick={toggleFavorite}
+            className="p-2 rounded-full bg-zinc-950/60 backdrop-blur-md border border-white/10 hover:bg-zinc-900/90 transition-all hover:scale-110 active:scale-95"
+            aria-label="Favorite"
+          >
+            <Heart className={cn("w-4 h-4 transition-colors", isFavorite ? "fill-[#F15A24] text-[#F15A24]" : "text-zinc-200")} />
+          </button>
+          <button
+            onClick={handleCardShare}
+            className="p-2 rounded-full bg-zinc-950/60 backdrop-blur-md border border-white/10 hover:bg-zinc-900/90 text-zinc-200 hover:text-[#F15A24] transition-all hover:scale-110 active:scale-95"
+            aria-label="Share"
+            title="مشاركة العرض"
+          >
+            <Share2 className="w-4 h-4" />
+          </button>
+        </div>
 
         {/* Top Badges */}
         <div className="absolute top-3 right-3 flex items-center gap-1.5 z-10">
-          <span className="bg-[#F15A24] text-white text-[11px] font-bold px-2.5 py-1 rounded-full shadow-lg shadow-orange-600/30">
-            {purposeAr}
+          <span className={cn(
+            "text-white text-[11px] font-bold px-2.5 py-1 rounded-full shadow-lg flex items-center gap-1",
+            isPartner ? "bg-amber-600 shadow-amber-600/30" : "bg-[#F15A24] shadow-orange-600/30"
+          )}>
+            {isPartner ? <Building2 className="w-3 h-3" /> : <Sparkles className="w-3 h-3" />}
+            <span>{categoryText}</span>
           </span>
           {property.isFeatured && (
             <span className="flex items-center gap-1 bg-zinc-950/80 backdrop-blur-md border border-amber-500/30 text-amber-400 text-[10px] font-bold px-2 py-0.5 rounded-full">

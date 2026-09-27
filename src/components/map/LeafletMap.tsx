@@ -141,14 +141,19 @@ export default function LeafletMap({
 
       const mainImage = property.images?.[0]?.url || 'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=800';
       const displayTitle = property.titleAr || property.title;
-      const purposeAr = property.purpose === 'SALE' || property.purpose === 'sale' ? 'للبيع' : 'للإيجار';
+      const isPartner = property.purpose?.toUpperCase() === 'PARTNER' || property.purpose?.toUpperCase() === 'INVESTMENT';
+      const badgeText = isPartner ? 'عروض شركاء سيما' : 'عروض سيما';
+      const badgeBg = isPartner ? '#d97706' : '#F15A24';
+      const origin = typeof window !== 'undefined' ? window.location.origin : '';
+      const shareUrl = `${origin}/properties/${property.id}`;
+      const shareMessage = `🏡 *عرض عقاري من خريطة سيما* 📍\n✨ *${displayTitle}*\n🏷️ التصنيف: ${badgeText}\n💰 السعر: ${new Intl.NumberFormat('ar-SA').format(property.price)} ريال\n🔗 تفاصيل العرض والخريطة:\n${shareUrl}`;
 
-      // Popup with direct link to details page
+      // Popup with direct link to details page and quick WhatsApp share
       const popupHtml = `
         <div class="sima-popup-card" dir="rtl">
           <a href="/properties/${property.id}" class="sima-popup-image-wrapper block">
             <img src="${mainImage}" alt="${displayTitle}" class="sima-popup-image" />
-            <div class="sima-popup-badge">${purposeAr}</div>
+            <div class="sima-popup-badge" style="background-color: ${badgeBg}; color: #ffffff !important;">${badgeText}</div>
             ${property.isFeatured ? '<div class="sima-popup-featured">مميز</div>' : ''}
           </a>
           <div class="sima-popup-content">
@@ -164,13 +169,18 @@ export default function LeafletMap({
               ${property.bathrooms ? `<span>🚿 ${property.bathrooms} حمام</span>` : ''}
               <span>📐 ${property.area} م²</span>
             </div>
-            <div class="sima-popup-footer">
+            <div class="sima-popup-footer" style="display:flex; align-items:center; justify-content:space-between; gap:6px;">
               <div class="sima-popup-price">
                 ${new Intl.NumberFormat('ar-SA').format(property.price)} <small>ر.س</small>
               </div>
-              <a href="/properties/${property.id}" class="sima-popup-btn" style="text-decoration:none; display:inline-block;">
-                عرض الصفحة الكاملة ←
-              </a>
+              <div style="display:flex; align-items:center; gap:5px;">
+                <a href="https://api.whatsapp.com/send?text=${encodeURIComponent(shareMessage)}" target="_blank" rel="noreferrer" title="مشاركة عبر واتساب" style="background:#25D366; color:#ffffff; padding:5px 8px; border-radius:8px; font-size:11px; text-decoration:none; font-weight:bold; display:inline-flex; align-items:center;">
+                  واتساب
+                </a>
+                <a href="/properties/${property.id}" class="sima-popup-btn" style="text-decoration:none; display:inline-block;">
+                  عرض ←
+                </a>
+              </div>
             </div>
           </div>
         </div>

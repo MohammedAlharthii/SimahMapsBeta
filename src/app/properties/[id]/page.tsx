@@ -22,7 +22,9 @@ import {
   ShieldCheck,
   Send,
   Loader2,
-  Lock
+  Lock,
+  Copy,
+  Building2
 } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { useSession } from 'next-auth/react';
@@ -119,16 +121,49 @@ export default function PropertyDetailsPage() {
     }
   };
 
-  const handleShare = () => {
+  const getShareMessage = () => {
+    const title = property?.titleAr || property?.title || 'عقار مميز';
+    const priceFormatted = new Intl.NumberFormat('ar-SA').format(property?.price || 0);
+    const typeText = property?.type === 'VILLA' ? 'فيلا' : property?.type === 'BUILDING' ? 'عمارة' : property?.type === 'OFFICE' ? 'مكتب' : 'عقار';
+    const isPartnerOffer = property?.purpose?.toUpperCase() === 'PARTNER' || property?.purpose?.toUpperCase() === 'INVESTMENT';
+    const category = isPartnerOffer ? 'عروض شركاء سيما' : 'عروض سيما';
+    const city = property?.city || 'الرياض';
+    const address = property?.address || property?.district || '';
+    const location = address ? `${city} - ${address}` : city;
+    const currentUrl = typeof window !== 'undefined' ? window.location.href : '';
+
+    return `🏡 *عرض عقاري من خريطة سيما* 📍\n━━━━━━━━━━━━━━━━━━━━\n✨ *${title}*\n🏷️ التصنيف: ${category} (${typeText})\n📍 الموقع: ${location}\n📐 المساحة: ${property?.area || 0} م²\n💰 السعر: ${priceFormatted} ريال سعودي\n━━━━━━━━━━━━━━━━━━━━\n🔗 *للاطلاع على تفاصيل العرض والصور والموقع عبر الخريطة الذكية:*\n${currentUrl}`;
+  };
+
+  const handleShare = async () => {
+    const shareText = getShareMessage();
+    const url = window.location.href;
     if (navigator.share) {
-      navigator.share({
-        title: property?.titleAr || property?.title,
-        url: window.location.href,
-      }).catch(() => {});
-    } else {
-      navigator.clipboard.writeText(window.location.href);
-      toast.success('تم نسخ رابط العقار إلى الحافظة');
+      try {
+        await navigator.share({
+          title: `عرض عقاري من سيما - ${property?.titleAr || property?.title}`,
+          text: shareText,
+          url: url,
+        });
+        return;
+      } catch (err) {
+        // Fallback to clipboard
+      }
     }
+    await navigator.clipboard.writeText(shareText);
+    toast.success('تم نسخ رسالة العرض والرابط إلى الحافظة');
+  };
+
+  const handleWhatsAppShare = () => {
+    const shareText = getShareMessage();
+    const waUrl = `https://api.whatsapp.com/send?text=${encodeURIComponent(shareText)}`;
+    window.open(waUrl, '_blank');
+  };
+
+  const handleCopyShare = async () => {
+    const shareText = getShareMessage();
+    await navigator.clipboard.writeText(shareText);
+    toast.success('تم نسخ رسالة العرض والرابط بنجاح! جاهزة للصق والمشاركة.');
   };
 
   if (loading) {
@@ -159,7 +194,8 @@ export default function PropertyDetailsPage() {
     ? property.images
     : [{ url: 'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=800', alt: property.title }];
 
-  const purposeAr = 'للبيع';
+  const isPartner = property?.purpose?.toUpperCase() === 'PARTNER' || property?.purpose?.toUpperCase() === 'INVESTMENT';
+  const categoryBadge = isPartner ? 'عروض شركاء سيما' : 'عروض سيما';
   const displayTitle = property.titleAr || property.title;
   const displayDesc = property.descriptionAr || property.description || 'عقار مميز بموقع استراتيجي وتشطيبات عصرية تلبي تطلعاتك.';
   const amenitiesList = Array.isArray(property.amenities)
@@ -236,8 +272,11 @@ export default function PropertyDetailsPage() {
         <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 mb-6">
           <div>
             <div className="flex items-center gap-2 mb-2">
-              <span className="bg-[#F15A24] text-white text-xs font-bold px-3 py-1 rounded-full shadow-md shadow-orange-500/20">
-                {purposeAr}
+              <span className={`text-xs font-bold px-3.5 py-1 rounded-full shadow-md flex items-center gap-1.5 ${
+                isPartner ? 'bg-amber-600 text-white shadow-amber-600/20' : 'bg-[#F15A24] text-white shadow-orange-500/20'
+              }`}>
+                {isPartner ? <Building2 className="w-3.5 h-3.5" /> : <Sparkles className="w-3.5 h-3.5" />}
+                <span>{categoryBadge}</span>
               </span>
               <span className="bg-zinc-800 text-white text-xs font-semibold px-3 py-1 rounded-full border border-zinc-700">
                 {property.type}
@@ -412,6 +451,51 @@ export default function PropertyDetailsPage() {
 
           {/* Contact & Booking Sidebar (1 col) */}
           <div className="space-y-6">
+            {/* Share Offer Box */}
+            <div className="bg-gradient-to-b from-zinc-900 to-zinc-950 border border-zinc-800 p-5 rounded-3xl shadow-xl shadow-black/40">
+              <div className="flex items-center gap-2.5 mb-2">
+                <div className="w-8 h-8 rounded-xl bg-[#F15A24]/10 border border-[#F15A24]/30 flex items-center justify-center text-[#F15A24]">
+                  <Share2 className="w-4 h-4" />
+                </div>
+                <div>
+                  <h3 className="text-sm font-bold text-white">مشاركة هذا العرض العقاري</h3>
+                  <p className="text-[11px] text-zinc-400">شارك رسالة العرض المنسقة مباشرة مع عملائك</p>
+                </div>
+              </div>
+
+              <div className="space-y-2 mt-4">
+                {/* WhatsApp Share Button */}
+                <button
+                  type="button"
+                  onClick={handleWhatsAppShare}
+                  className="w-full flex items-center justify-center gap-2 bg-[#25D366] hover:bg-[#20ba5a] text-white py-2.5 px-4 rounded-xl text-xs font-bold transition-all shadow-md shadow-emerald-600/20 active:scale-[0.99]"
+                >
+                  <MessageCircle className="w-4 h-4 fill-white" />
+                  <span>مشاركة عبر واتساب (رسالة منسقة)</span>
+                </button>
+
+                {/* Copy Formatted Message */}
+                <button
+                  type="button"
+                  onClick={handleCopyShare}
+                  className="w-full flex items-center justify-center gap-2 bg-zinc-800 hover:bg-zinc-700 text-zinc-200 hover:text-white py-2.5 px-4 rounded-xl text-xs font-semibold transition-all border border-zinc-700 active:scale-[0.99]"
+                >
+                  <Copy className="w-3.5 h-3.5 text-[#F15A24]" />
+                  <span>نسخ رسالة العرض والرابط</span>
+                </button>
+
+                {/* Device Native Share */}
+                <button
+                  type="button"
+                  onClick={handleShare}
+                  className="w-full flex items-center justify-center gap-2 bg-zinc-900 hover:bg-zinc-800/80 text-zinc-400 hover:text-zinc-200 py-2 px-4 rounded-xl text-[11px] font-medium transition-all border border-zinc-800"
+                >
+                  <Share2 className="w-3.5 h-3.5" />
+                  <span>خيارات مشاركة أخرى</span>
+                </button>
+              </div>
+            </div>
+
             {/* Quick Contact Box */}
             <div className="bg-gradient-to-b from-zinc-900 to-zinc-950 border border-zinc-800 p-6 rounded-3xl shadow-xl shadow-black/40">
               <h3 className="text-base font-bold text-white mb-2">طلب معاينة العرض</h3>
