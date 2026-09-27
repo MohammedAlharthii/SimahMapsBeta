@@ -1,0 +1,45 @@
+version: '3.8'
+
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: sima_mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: sima_root_password_2026
+      MYSQL_DATABASE: aqar_crm
+      MYSQL_USER: sima_user
+      MYSQL_PASSWORD: sima_secure_password_2026
+    ports:
+      - "127.0.0.1:3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD-SHELL", "mysqladmin ping -h 127.0.0.1 -u$$MYSQL_USER -p$$MYSQL_PASSWORD --silent"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+      start_period: 15s
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: sima_crm_app
+    restart: always
+    depends_on:
+      mysql:
+        condition: service_healthy
+    ports:
+      - "3000:3000"
+    environment:
+      - DATABASE_URL=mysql://sima_user:sima_secure_password_2026@mysql:3306/aqar_crm
+      - NEXTAUTH_URL=http://localhost:3000
+      - NEXTAUTH_SECRET=sima-realestate-vps-super-secret-key-2026
+      - CARTO_API_KEY=cb1_3w2i_1_0086e70d092d4c1ac7eb1dc2
+      - NODE_ENV=production
+      - PORT=3000
+
+volumes:
+  mysql_data:
+    driver: local
