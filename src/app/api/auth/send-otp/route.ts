@@ -9,7 +9,7 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'بيانات غير مكتملة' }, { status: 400 });
     }
 
-    const senderEmail = process.env.EMAIL_FROM || 'sgt4.mvn@gmail.com';
+    const senderEmail = process.env.EMAIL_FROM || 'sgtmvn@gmail.com';
     const senderName = 'خريطة سيما العقارية';
     const emailFromFormatted = `"${senderName}" <${senderEmail}>`;
 
@@ -19,7 +19,7 @@ export async function POST(req: NextRequest) {
     if (type === 'email') {
       const smtpHost = process.env.SMTP_HOST || 'smtp.gmail.com';
       const smtpPort = Number(process.env.SMTP_PORT) || 465;
-      const smtpUser = process.env.SMTP_USER || 'sgt4.mvn@gmail.com';
+      const smtpUser = process.env.SMTP_USER || 'sgtmvn@gmail.com';
       const smtpPass = process.env.SMTP_PASS || process.env.GMAIL_APP_PASSWORD;
 
       if (smtpPass) {
