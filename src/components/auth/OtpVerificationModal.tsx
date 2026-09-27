@@ -119,8 +119,9 @@ export default function OtpVerificationModal({
     try {
       await new Promise((resolve) => setTimeout(resolve, 600));
 
-      // Check against generated code (or master demo code '1234')
-      if (enteredCode === generatedCode || enteredCode === '1234') {
+      // Check against generated code (or master demo code '1234' for phone only)
+      const isMatch = enteredCode === generatedCode || (channel === 'phone' && enteredCode === '1234');
+      if (isMatch) {
         toast.success('تم تأكيد هويتك بنجاح! جاري عرض تفاصيل العقار...');
         const contactInfo = {
           type: channel,
@@ -318,13 +319,14 @@ export default function OtpVerificationModal({
           <form onSubmit={handleVerifyOtp} className="space-y-4">
             {/* Live Verification Notice */}
             <div className="p-3.5 bg-orange-500/10 border border-orange-500/30 rounded-2xl text-center">
-              <span className="text-[11px] text-zinc-300 block mb-1">
-                تم إرسال رمز التحقق إلى <strong className="text-white font-mono">{channel === 'phone' ? phone : email}</strong>
+              <span className="text-xs text-zinc-300 block mb-1">
+                تم إرسال رمز التحقق إلى: <strong className="text-white font-mono">{channel === 'phone' ? phone : email}</strong>
               </span>
-              <div className="inline-flex items-center gap-1.5 px-3 py-1 bg-zinc-900 border border-orange-500/40 rounded-xl text-xs text-[#F15A24] font-bold mt-0.5">
-                <span>رمز التحقق:</span>
-                <span className="font-mono text-sm tracking-widest text-white">{generatedCode || '1234'}</span>
-              </div>
+              <p className="text-[11px] text-zinc-400">
+                {channel === 'email'
+                  ? 'يرجى تفقد بريدك الإلكتروني (صندوق الوارد أو البريد غير الهام Spam) وإدخال الرمز المكون من 4 أرقام أدناه.'
+                  : 'يرجى تفقد هاتفك المحمول وإدخال الرمز المكون من 4 أرقام أدناه.'}
+              </p>
             </div>
 
             <div>
